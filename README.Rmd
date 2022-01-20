@@ -1,25 +1,26 @@
 ---
-title: "Fisheye Demo"
+title: "Demo of the [`fisheye` package](https://github.com/riatelab/fisheye)"
 author: "Timothée Giraud"
-date: "06/10/2021"
+date: "20/01/2022"
 output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
+
 
 ## Package Install
 
-```{r, eval = F}
-remotes::install_github("riatelab/fisheye")
+```{r, eval=FALSE}
+install.packages("fisheye")
 ```
 
 
 
 ## Data Preparation
 
-```{r, eval = F}
+```{r}
 library(sf)
 library(fisheye)
 library(mapsf)
@@ -40,12 +41,11 @@ g <- st_collection_extract(g, "LINESTRING")
 
 ## Single Images
 
-```{r, eval = F}
+```{r}
 # transformation center
 target <- com[com$INSEE_COM == 75115,]
 # transformation intensity parameter
 k <- seq(6,3,by = -.03)
-
 for(i in 1:length(k)){
   # transform graticules
   gfe <- fisheye(g, centre = target, method = 'log', k = k[i])
@@ -57,7 +57,7 @@ for(i in 1:length(k)){
   th <- mf_theme("dark", mar = c(0,0,.9,0), line = .9, cex = .7)
   # export map
   mf_export(comfe, filename = sprintf("img/img%06d.png", i),
-            width = 600, height = 500, res = 130, theme = th)
+            width = 540, height = 480, res = 130, theme = th)
   mf_map(comfe, border = "grey70")
   mf_map(depfe, border = "grey40", col = NA, lwd = .7, add = T)
   mf_map(comfe[comfe$INSEE_COM==75115,], col = "grey40", border = NA, add = T)
@@ -67,7 +67,7 @@ for(i in 1:length(k)){
             inches = .1, title = "N. Workers (2015)", title_cex = .6,
             val_cex = .5, frame = T)
   mf_title("Place of residence of workers of the 15th district of Paris")
-  mf_credits("T. Giraud, 2021\nDéplacements domicile-lieu de travail, INSEE 2018",
+  mf_credits("T. Giraud, 2022\nDéplacements domicile-lieu de travail, INSEE 2018",
              cex = .5, pos = "bottomright")
   dev.off()
 }
@@ -85,7 +85,7 @@ for(i in 1:length(k)){
 
 ## Gif Creation
 
-```{r, eval = F}
+```{r}
 # create gif
 library(magick)
 # list file names and read in
@@ -103,3 +103,24 @@ image_write(image = img_animated, path = "gif/mob.gif")
 ```
 
 ![](gif/mob.gif)
+
+
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
